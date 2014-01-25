@@ -29,6 +29,11 @@ namespace Resp
                 case '$':
                     {
                         int length = int.Parse(reader.ReadLine());
+                        if (length < 0)
+                        {
+                            return null;
+                        }
+
                         char[] buf = new char[length];
                         reader.ReadBlock(buf, 0, length);
                         reader.ReadLine();
@@ -37,6 +42,11 @@ namespace Resp
                 case '*':
                     {
                         int length = int.Parse(reader.ReadLine());
+                        if (length < 0)
+                        {
+                            return null;
+                        }
+
                         object[] arr = new object[length];
                         for (int i = 0; i < length; i++)
                         {

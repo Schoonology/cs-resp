@@ -75,6 +75,15 @@ namespace Resp.Tests
         }
 
         [TestMethod]
+        public void TestDeserializeBulkStringNull()
+        {
+            Assert.AreEqual(
+                this.serializer.Deserialize("$-1\r\n"),
+                null
+            );
+        }
+
+        [TestMethod]
         public void TestDeserializeError()
         {
             var obj = this.serializer.Deserialize("-BADERR some message");
@@ -110,6 +119,15 @@ namespace Resp.Tests
             for (int i = 0; i < arr.Length; i++) {
                 Assert.AreEqual(arr[i], expected[i]);
             }
+        }
+
+        [TestMethod]
+        public void TestDeserializeArrayNull()
+        {
+            Assert.AreEqual(
+                this.serializer.Deserialize("*-1\r\n"),
+                null
+            );
         }
 
         [TestMethod]
