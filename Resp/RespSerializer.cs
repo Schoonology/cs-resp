@@ -2,36 +2,26 @@ namespace Resp
 {
     public struct Error
     {
-        public string type;
-        public string message;
+        string type;
+        string message;
 
         public Error(string type, string message)
         {
-            this.type = type;
+            this.type = type.ToUpper();
             this.message = message;
         }
-    }
 
-    public struct Status
-    {
-        public string message;
-
-        public Status(string message)
+        public string ToResp()
         {
-            this.message = message;
+            return "-" + this.type + " " + this.message + "\r\n";
         }
     }
 
     public class RespSerializer
     {
-        public string Serialize(Status val)
-        {
-            return "+" + val.message + "\r\n";
-        }
-
         public string Serialize(Error val)
         {
-            return "-" + val.type + " " + val.message + "\r\n";
+            return val.ToResp();
         }
 
         public string Serialize(int val)
@@ -76,10 +66,6 @@ namespace Resp
             if (val is object[])
             {
                 return Serialize((object[])val);
-            }
-            if (val is Status)
-            {
-                return Serialize((Status)val);
             }
             if (val is Error)
             {
