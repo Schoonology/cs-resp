@@ -111,6 +111,15 @@ namespace Resp.Tests
                 Assert.AreEqual(arr[i], expected[i]);
             }
         }
+
+        [TestMethod]
+        public void TestDeserializeBadStart()
+        {
+            Assert.AreEqual(
+                this.serializer.Deserialize("!!!:42\r\n"),
+                42
+            );
+        }
     }
 }
 

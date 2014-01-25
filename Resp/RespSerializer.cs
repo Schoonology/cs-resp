@@ -80,46 +80,41 @@ namespace Resp
 
         private object ReadNextFrom(StringReader reader)
         {
-            string line;
-
-            while ((line = reader.ReadLine()) != null)
+            switch (reader.Read())
             {
-                switch (line[0])
-                {
-                    case '+':
-                        return line.Substring(1);
-                    case '-':
+                case '+':
+                    return reader.ReadLine();
+                case '-':
+                    {
+                        char[] sep = { ' ' };
+                        string[] split = reader.ReadLine().Split(sep, 2);
+                        return new Error(split[0], split[1]);
+                    }
+                case ':':
+                    return int.Parse(reader.ReadLine());
+                case '$':
+                    {
+                        int length = int.Parse(reader.ReadLine());
+                        char[] buf = new char[length];
+                        reader.ReadBlock(buf, 0, length);
+                        reader.ReadLine();
+                        return (new StringBuilder()).Append(buf).ToString();
+                    }
+                case '*':
+                    {
+                        int length = int.Parse(reader.ReadLine());
+                        object[] arr = new object[length];
+                        for (int i = 0; i < length; i++)
                         {
-                            char[] sep = { ' ' };
-                            string[] split = line.Substring(1).Split(sep, 2);
-                            return new Error(split[0], split[1]);
+                            arr[i] = this.ReadNextFrom(reader);
                         }
-                    case ':':
-                        return int.Parse(line.Substring(1));
-                    case '$':
-                        {
-                            int length = int.Parse(line.Substring(1));
-                            char[] buf = new char[length];
-                            reader.ReadBlock(buf, 0, length);
-                            reader.ReadLine();
-                            return (new StringBuilder()).Append(buf).ToString();
-                        }
-                    case '*':
-                        {
-                            int length = int.Parse(line.Substring(1));
-                            object[] arr = new object[length];
-                            for (int i = 0; i < length; i++)
-                            {
-                                arr[i] = this.ReadNextFrom(reader);
-                            }
-                            return arr;
-                        }
-                    default:
-                        return null;
-                }
+                        return arr;
+                    }
+                case -1:
+                    throw new EndOfStreamException();
+                default:
+                    return ReadNextFrom(reader);
             }
-
-            return null;
         }
     }
 }
