@@ -55,5 +55,62 @@ namespace Resp.Tests
                 "*6\r\n:1\r\n:2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n:5\r\n:0\r\n"
             );
         }
+
+        [TestMethod]
+        public void TestDeserializeSimpleString()
+        {
+            Assert.AreEqual(
+                this.serializer.Deserialize("+OK"),
+                "OK"
+            );
+        }
+
+        [TestMethod]
+        public void TestDeserializeBulkString()
+        {
+            Assert.AreEqual(
+                this.serializer.Deserialize("$6\r\nfoobar\r\n"),
+                "foobar"
+            );
+        }
+
+        [TestMethod]
+        public void TestDeserializeError()
+        {
+            var obj = this.serializer.Deserialize("-BADERR some message");
+
+            Assert.IsTrue(obj is Error);
+            Error err = (Error)obj;
+
+            Assert.AreEqual(err.type, "BADERR");
+            Assert.AreEqual(err.message, "some message");
+        }
+
+        [TestMethod]
+        public void TestDeserializeInteger()
+        {
+            Assert.AreEqual(
+                this.serializer.Deserialize(":42"),
+                42
+            );
+        }
+
+        [TestMethod]
+        public void TestDeserializeArray()
+        {
+            object[] expected = { 1, 2, "foo", "bar", 5, 0 };
+            object obj = this.serializer.Deserialize("*6\r\n:1\r\n:2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n:5\r\n:0\r\n");
+
+            Assert.IsTrue(obj is object[]);
+
+            object[] arr = (object[])obj;
+
+            Assert.AreEqual(arr.Length, expected.Length);
+
+            for (int i = 0; i < arr.Length; i++) {
+                Assert.AreEqual(arr[i], expected[i]);
+            }
+        }
     }
 }
+
