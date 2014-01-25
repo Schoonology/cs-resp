@@ -1,6 +1,3 @@
-using System.IO;
-using System.Text;
-
 namespace Resp
 {
     public struct Error
@@ -74,47 +71,8 @@ namespace Resp
 
         public object Deserialize(string str)
         {
-            StringReader reader = new StringReader(str);
-            return this.ReadNextFrom(reader);
-        }
-
-        private object ReadNextFrom(StringReader reader)
-        {
-            switch (reader.Read())
-            {
-                case '+':
-                    return reader.ReadLine();
-                case '-':
-                    {
-                        char[] sep = { ' ' };
-                        string[] split = reader.ReadLine().Split(sep, 2);
-                        return new Error(split[0], split[1]);
-                    }
-                case ':':
-                    return int.Parse(reader.ReadLine());
-                case '$':
-                    {
-                        int length = int.Parse(reader.ReadLine());
-                        char[] buf = new char[length];
-                        reader.ReadBlock(buf, 0, length);
-                        reader.ReadLine();
-                        return (new StringBuilder()).Append(buf).ToString();
-                    }
-                case '*':
-                    {
-                        int length = int.Parse(reader.ReadLine());
-                        object[] arr = new object[length];
-                        for (int i = 0; i < length; i++)
-                        {
-                            arr[i] = this.ReadNextFrom(reader);
-                        }
-                        return arr;
-                    }
-                case -1:
-                    throw new EndOfStreamException();
-                default:
-                    return ReadNextFrom(reader);
-            }
+            RespReader reader = new RespReader(str);
+            return reader.Read();
         }
     }
 }
