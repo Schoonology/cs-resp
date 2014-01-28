@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Resp
 {
-    class RespReader
+    public class RespReader
     {
         private TextReader reader;
 

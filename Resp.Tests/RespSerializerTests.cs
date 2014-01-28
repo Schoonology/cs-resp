@@ -57,6 +57,40 @@ namespace Resp.Tests
         }
 
         [TestMethod]
+        public void TestSerializeStringNull()
+        {
+            Assert.AreEqual(
+                this.serializer.Serialize((string)null),
+                "$-1\r\n"
+            );
+        }
+
+        [TestMethod]
+        public void TestSerializeArrayNull()
+        {
+            Assert.AreEqual(
+                this.serializer.Serialize((object[])null),
+                "*-1\r\n"
+            );
+        }
+
+        [TestMethod]
+        public void TestSerializeFloat()
+        {
+            Assert.AreEqual(
+                this.serializer.Serialize(24.5f),
+                ":24\r\n"
+            );
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestSerializeBadType()
+        {
+            this.serializer.Serialize(typeof(Object));
+        }
+
+        [TestMethod]
         public void TestDeserializeSimpleString()
         {
             Assert.AreEqual(

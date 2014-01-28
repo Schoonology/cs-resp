@@ -1,3 +1,5 @@
+using System;
+
 namespace Resp
 {
     public struct Error
@@ -24,6 +26,11 @@ namespace Resp
             return ":" + val + "\r\n";
         }
 
+        public string Serialize(float val)
+        {
+            return ":" + Math.Floor(val) + "\r\n";
+        }
+
         public string Serialize(bool val)
         {
             return ":" + (val ? 1 : 0) + "\r\n";
@@ -31,11 +38,21 @@ namespace Resp
 
         public string Serialize(string val)
         {
+            if (val == null)
+            {
+                return "$-1\r\n";
+            }
+
             return "$" + val.Length + "\r\n" + val + "\r\n";
         }
 
         public string Serialize(object[] val)
         {
+            if (val == null)
+            {
+                return "*-1\r\n";
+            }
+
             string[] strs = new string[val.Length];
             for (int i = 0; i < val.Length; ++i)
             {
@@ -49,6 +66,10 @@ namespace Resp
             if (val is int)
             {
                 return Serialize((int)val);
+            }
+            if (val is float)
+            {
+                return Serialize((float)val);
             }
             if (val is bool)
             {
@@ -66,7 +87,8 @@ namespace Resp
             {
                 return Serialize((Error)val);
             }
-            return "";
+
+            throw new ArgumentException("Invalid type");
         }
 
         public object Deserialize(string str)
