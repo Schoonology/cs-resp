@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Resp</id>
+    <version>1.0.0</version>
+    <authors>Michael Schoonmaker</authors>
+    <owners>Michael Schoonmaker</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/Schoonology/cs-resp</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>An implementation of the Redis Encoding and Serialization Protocol for .Net.</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>Resp Redis TCP Encoding Protocol</tags>
+  </metadata>
+</package>
