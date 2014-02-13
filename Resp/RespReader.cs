@@ -12,6 +12,11 @@ namespace Resp
             reader = new StringReader(str);
         }
 
+        public RespReader(Stream stream)
+        {
+            reader = new StreamReader(stream);
+        }
+
         public object Read()
         {
             switch (reader.Read())
