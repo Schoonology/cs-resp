@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Resp
 {
-    class RespClient
+    public class RespClient
     {
         private Stream _stream;
         public Stream stream
