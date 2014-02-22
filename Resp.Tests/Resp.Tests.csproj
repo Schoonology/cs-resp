@@ -53,6 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="RespClientTests.cs" />
     <Compile Include="RespReaderTests.cs" />
     <Compile Include="RespSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
