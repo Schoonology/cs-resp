@@ -11,17 +11,8 @@ namespace Resp
 {
     public class RespClient
     {
-        private Stream _stream;
-        public Stream stream
-        {
-            get { return this._stream; }
-            set
-            {
-                this._stream = value;
-                this.reader = new RespReader(this._stream);
-            }
-        }
-
+        private TcpClient client;
+        private Stream stream;
         private RespReader reader;
         private RespSerializer serializer;
 
@@ -34,6 +25,7 @@ namespace Resp
         {
             TcpClient client = new TcpClient(host, port);
             this.stream = client.GetStream();
+            this.reader = new RespReader(this.stream);
         }
 
         public async Task ConnectAsync(string host, int port)
@@ -41,6 +33,13 @@ namespace Resp
             TcpClient client = new TcpClient();
             await client.ConnectAsync(host, port);
             this.stream = client.GetStream();
+            this.reader = new RespReader(this.stream);
+        }
+
+        public void Close()
+        {
+            this.stream.Close();
+            this.client.Close();
         }
 
         public void Write(object value)
