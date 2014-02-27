@@ -16,6 +16,11 @@ namespace Resp
         private RespReader reader;
         private RespSerializer serializer;
 
+        public bool Connected
+        {
+            get { return this.client.Connected; }
+        }
+
         public RespClient()
         {
             this.serializer = new RespSerializer();
@@ -84,6 +89,11 @@ namespace Resp
         {
             await this.WriteAsync(value);
             return await this.ReadAsync();
+        }
+
+        public override string ToString()
+        {
+            return "<RespClient " + this.client.Client.RemoteEndPoint + ">";
         }
     }
 }
