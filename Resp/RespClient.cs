@@ -21,17 +21,27 @@ namespace Resp
             this.serializer = new RespSerializer();
         }
 
+        public RespClient(TcpClient client)
+            : this()
+        {
+            this.Wrap(client);
+        }
+
         public void Connect(string host, int port)
         {
-            TcpClient client = new TcpClient(host, port);
-            this.stream = client.GetStream();
-            this.reader = new RespReader(this.stream);
+            this.Wrap(new TcpClient(host, port));
         }
 
         public async Task ConnectAsync(string host, int port)
         {
             TcpClient client = new TcpClient();
             await client.ConnectAsync(host, port);
+            this.Wrap(client);
+        }
+
+        private void Wrap(TcpClient client)
+        {
+            this.client = client;
             this.stream = client.GetStream();
             this.reader = new RespReader(this.stream);
         }
